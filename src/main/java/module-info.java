@@ -9,6 +9,12 @@ module pck.enoteserver {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
+    requires java.sql;
+    requires org.postgresql.jdbc;
+    requires org.json;
+
+    opens pck.enote_server.api.helper to javafx.fxml;
+    exports pck.enote_server.api.helper;
 
     opens pck.enote_server to javafx.fxml;
     exports pck.enote_server;
