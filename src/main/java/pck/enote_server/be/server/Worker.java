@@ -1,15 +1,23 @@
 package pck.enote_server.be.server;
 
-import pck.enote_server.api.helper.REQUEST_TYPE;
 import pck.enote_server.api.helper.StructClass;
-import pck.enote_server.api.res.BaseRes;
+import pck.enote_server.api.req.BaseReq;
+import pck.enote_server.api.req.REQUEST_TYPE;
+import pck.enote_server.api.req.SendFileReq;
+import pck.enote_server.api.req.TestConnectionReq;
 import pck.enote_server.api.res.RESPONSE_STATUS;
+import pck.enote_server.api.res.SendFileRes;
 import pck.enote_server.api.res.TestConnectionRes;
+import pck.enote_server.cloudinary.CloudAPI;
+import pck.enote_server.helper.FileHelper;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Worker extends Thread {
     private final Socket socket;
@@ -34,23 +42,42 @@ public class Worker extends Thread {
     private String handleClientRequest(String packedClientReq) {
 
         HashMap<String, String> clientReq = StructClass.unpack(packedClientReq);
+        REQUEST_TYPE reqType = BaseReq.getReqTypeFromPackedReq(clientReq);
         System.out.println(clientReq);
-        BaseRes res = new BaseRes(RESPONSE_STATUS.SUCCESS, "Server OK", REQUEST_TYPE.TEST_CONNECTION);
-        switch (REQUEST_TYPE.valueOf(clientReq.get("type"))) {
+        switch (reqType) {
             case TEST_CONNECTION -> {
-                res = new TestConnectionRes(
-                        RESPONSE_STATUS.SUCCESS,
-                        "Kết nối thành công đến server",
-                        REQUEST_TYPE.TEST_CONNECTION);
-                return ((TestConnectionRes) res).getPackedRes();
+                TestConnectionReq testConnReq = new TestConnectionReq();
+                if (testConnReq.initFromHashMap(clientReq)) {
+                    return new TestConnectionRes(RESPONSE_STATUS.SUCCESS, "Server is now working", reqType).getPackedRes();
+                }
+                return new TestConnectionRes(RESPONSE_STATUS.FAILED, "Data not valid", reqType).getPackedRes();
             }
             case LOG_IN -> {
                 //handle login
                 System.out.println("login");
                 return "";
             }
+            case UPLOAD -> {
+                SendFileReq sendFileReq = new SendFileReq();
+                if (sendFileReq.initFromHashMap(clientReq)) {
+                    try {
+                        File file = FileHelper.getFileFromBuffer(sendFileReq.getBuffer());
+                        CloudAPI cloudAPI = new CloudAPI();
+                        Map result = cloudAPI.uploadFile(file);
+
+                        System.out.println(result);
+                        SendFileRes sendFileRes = new SendFileRes(RESPONSE_STATUS.FAILED, "upload successfully", reqType, "url test");
+
+                        return sendFileRes.getPackedRes();
+                    } catch (IOException e) {
+                        System.out.println("UPLOAD -> getFileFromBuffer: err");
+                        return new TestConnectionRes(RESPONSE_STATUS.FAILED, "Data not valid", reqType).getPackedRes();
+                    }
+                }
+                return new TestConnectionRes(RESPONSE_STATUS.FAILED, "Data not valid", reqType).getPackedRes();
+            }
             default -> {
-                res = new TestConnectionRes(
+                TestConnectionRes res = new TestConnectionRes(
                         RESPONSE_STATUS.FAILED,
                         "Server bị lỗi",
                         REQUEST_TYPE.TEST_CONNECTION);

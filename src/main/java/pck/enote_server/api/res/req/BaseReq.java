@@ -1,4 +1,4 @@
-package pck.enote_server.api.req;
+package pck.enote_server.api.res.req;
 
 
 import pck.enote_server.api.helper.StructClass;

@@ -1,4 +1,4 @@
-package pck.enote_server.api.helper;
+package pck.enote_server.api.res.req;
 
 public enum REQUEST_TYPE {
     TEST_CONNECTION,

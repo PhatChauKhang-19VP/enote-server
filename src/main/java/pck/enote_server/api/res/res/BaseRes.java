@@ -1,7 +1,7 @@
-package pck.enote_server.api.res;
+package pck.enote_server.api.res.res;
 
 
-import pck.enote_server.api.req.REQUEST_TYPE;
+import pck.enote_server.api.res.req.REQUEST_TYPE;
 
 public abstract class BaseRes {
     protected RESPONSE_STATUS status;

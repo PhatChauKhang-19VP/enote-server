@@ -11,11 +11,13 @@ module pck.enoteserver {
     requires eu.hansolo.tilesfx;
     requires java.sql;
     requires org.postgresql.jdbc;
-    requires org.json;
+    requires cloudinary.core;
 
     opens pck.enote_server.api.helper to javafx.fxml;
     exports pck.enote_server.api.helper;
 
     opens pck.enote_server to javafx.fxml;
     exports pck.enote_server;
+    exports pck.enote_server.api.req;
+    opens pck.enote_server.api.req to javafx.fxml;
 }
