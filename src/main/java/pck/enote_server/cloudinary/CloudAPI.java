@@ -58,22 +58,33 @@ public class CloudAPI {
         return config;
     }
 
-    private Map getUploadConfig(String resourceType) {
+    private Map getUploadConfig(String filename) {
         return ObjectUtils.asMap(
-                "public_id", "anh.jpg",
+                "public_id", filename,
                 "folder", uploadFolder,
                 "overwrite", true,
-                "resource_type", resourceType);
+                "resource_type", "auto");
     }
 
     public Map uploadFile(File file) {
         try {
-            Map m = cld.uploader().upload(file, getUploadConfig("raw"));
+            Map m = cld.uploader().upload(file, getUploadConfig(file.getName()));
             System.out.println(m);
             return m;
         } catch (IOException e) {
             e.printStackTrace();
-            return ObjectUtils.emptyMap();
+            return null;
+        }
+    }
+
+    public Map uploadFile(String filename, byte[] bytes) {
+        try {
+            Map m = cld.uploader().upload(bytes, getUploadConfig(filename));
+            System.out.println(m);
+            return m;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
