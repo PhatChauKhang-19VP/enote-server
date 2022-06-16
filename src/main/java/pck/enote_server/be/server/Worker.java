@@ -36,14 +36,7 @@ public class Worker extends Thread {
             }
             case UPLOAD -> {
                 SendFileReq sendFileReq = (SendFileReq) req;
-
-//                File file = FileHelper.getFileFromBuffer(sendFileReq.getFilename(), sendFileReq.getBuffer());
-//                if (file == null){
-//                    return API.getErrorRes();
-//                }
-
-                CloudAPI cloudAPI = new CloudAPI();
-                Map result = cloudAPI.uploadFile(sendFileReq.getFilename(), sendFileReq.getBuffer());
+                Map result = CloudAPI.uploadFile(sendFileReq.getFilename(), sendFileReq.getBuffer());
 
                 if (result == null){
                     return API.getErrorRes();
