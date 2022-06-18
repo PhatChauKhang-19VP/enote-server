@@ -11,12 +11,12 @@ public class DatabaseCommunication {
     private static String host = "ec2-52-73-184-24.compute-1.amazonaws.com1";
     private static String dbName = "dkk1h7r7mfhqu1";
     private static String user = "jcbvdwlnjerxkw1";
-    private static String port = "54321";
+    private static String port = "5432";
     private static String password = "af0e45f32760eedb64e2ceb91f291826832f9396142eb1fb522f16ef3b46bd081";
 
     public static void main(String[] args) {
         init();
-        System.out.println(login("chau", "chau"));
+        System.out.println(signUp("phat6", "phat6"));
     }
 
     private static String getURL() {
@@ -62,6 +62,38 @@ public class DatabaseCommunication {
                 }
             }
             return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean signUp(String username, String password) {
+        try (Connection conn = connect();
+             CallableStatement cstmt = conn.prepareCall("call usp_signup(?, ?, ?)");
+        ) {
+            cstmt.setString(1, username);
+            cstmt.setString(2, password);
+            cstmt.registerOutParameter(3, Types.VARCHAR);
+
+            int row = cstmt.executeUpdate();
+
+            return cstmt.getString(3).equals("true");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean addNewNote(String username, String type, String noteUri) {
+        try (Connection conn = connect();
+             CallableStatement cstmt = conn.prepareCall("call usp_save_note(?, ?, ?)");
+        ) {
+            cstmt.setString(1, username);
+            cstmt.setString(2, type);
+            cstmt.setString(3, noteUri);
+
+            return cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
