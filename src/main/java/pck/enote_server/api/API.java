@@ -1,13 +1,7 @@
 package pck.enote_server.api;
 
-import pck.enote_server.api.req.BaseReq;
-import pck.enote_server.api.req.REQUEST_TYPE;
-import pck.enote_server.api.req.SendFileReq;
-import pck.enote_server.api.req.TestConnectionReq;
-import pck.enote_server.api.res.BaseRes;
-import pck.enote_server.api.res.RESPONSE_STATUS;
-import pck.enote_server.api.res.SendFileRes;
-import pck.enote_server.api.res.TestConnectionRes;
+import pck.enote_server.api.req.*;
+import pck.enote_server.api.res.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -26,10 +20,19 @@ public class API {
             REQUEST_TYPE reqType = REQUEST_TYPE.valueOf(dataIn.readUTF());
             System.out.println(reqType);
 
-            switch (reqType){
+            switch (reqType) {
                 case TEST_CONNECTION -> {
                     return new TestConnectionReq();
                 }
+
+                case SIGN_IN -> {
+                    // read username & password
+                    String username = dataIn.readUTF();
+                    String password = dataIn.readUTF();
+
+                    return new SignInReq(username, password);
+                }
+
                 case UPLOAD -> {
                     // read filename
                     String filename = dataIn.readUTF();
@@ -54,13 +57,13 @@ public class API {
         }
     }
 
-    public static boolean sendRes(Socket socket, BaseRes res){
-        try(DataOutputStream dataOut = new DataOutputStream(socket.getOutputStream())) {
+    public static boolean sendRes(Socket socket, BaseRes res) {
+        try (DataOutputStream dataOut = new DataOutputStream(socket.getOutputStream())) {
             REQUEST_TYPE reqType = res.getType();
 
-            switch (reqType){
+            switch (reqType) {
                 case TEST_CONNECTION -> {
-                    TestConnectionRes testConnectionRes = (TestConnectionRes)res;
+                    TestConnectionRes testConnectionRes = (TestConnectionRes) res;
 
                     dataOut.writeUTF(testConnectionRes.getType().name());
                     dataOut.writeUTF(testConnectionRes.getStatus().name());
@@ -68,8 +71,18 @@ public class API {
 
                     return true;
                 }
+
+                case SIGN_IN -> {
+                    SignInRes signInRes = (SignInRes) res;
+                    dataOut.writeUTF(signInRes.getType().name());
+                    dataOut.writeUTF(signInRes.getStatus().name());
+                    dataOut.writeUTF(signInRes.getMsg());
+
+                    return true;
+                }
+
                 case UPLOAD -> {
-                    SendFileRes sendFileRes = (SendFileRes)res;
+                    SendFileRes sendFileRes = (SendFileRes) res;
 
                     dataOut.writeUTF(sendFileRes.getType().name());
                     dataOut.writeUTF(sendFileRes.getStatus().name());
@@ -95,7 +108,7 @@ public class API {
         }
     }
 
-    public static TestConnectionRes getErrorRes(){
+    public static TestConnectionRes getErrorRes() {
         return new TestConnectionRes(
                 RESPONSE_STATUS.FAILED,
                 "Server bị lỗi");
