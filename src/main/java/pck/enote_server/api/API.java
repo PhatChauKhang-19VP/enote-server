@@ -38,7 +38,6 @@ public class API {
                     String username = dataIn.readUTF();
                     String password = dataIn.readUTF();
 
-                    return new SignInReq(username, password);
                     return new SignUpReq(username, password);
                 }
 
