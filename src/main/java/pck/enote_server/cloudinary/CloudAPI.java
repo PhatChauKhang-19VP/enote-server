@@ -17,38 +17,12 @@ public class CloudAPI {
     private static String apiKey = "471685925227765";
     private static String apiSecret = "L--pAliKsFYLbtu2pXa_mAeZQio";
     private static String uploadFolder = "MMT/enote/assets";
-    private static boolean isInit = false;
-    private Cloudinary cld;
-
-    public CloudAPI() {
-        if (!isInit) {
-            InputStream inputStream = getClass().getResourceAsStream("/config/cloudinary.properties");
-            Properties props = new Properties();
-            try {
-                props.load(inputStream);
-            } catch (IOException e) {
-                System.out.println("CANNOT LOAD CONFIG FILE. PROGRAM WILL SHUT DOWN !!!");
-                exit();
-            }
-
-            name = props.getProperty("CLOUD_NAME", name);
-            apiKey = props.getProperty("CLOUD_API_KEY", apiKey);
-            apiSecret = props.getProperty("CLOUD_API_SECRET", apiSecret);
-            uploadFolder = props.getProperty("CLOUD_UPLOAD_FOLDER", uploadFolder);
-
-            isInit = true;
-        }
-        cld = new Cloudinary(getConfig());
-
-        System.out.println(cld);
-    }
 
     public static void main(String[] args) {
-        System.out.println(new CloudAPI());
-        Cloudinary cld = new Cloudinary();
+        init();
     }
 
-    private Map<String, String> getConfig() {
+    private static Map<String, String> getConfig() {
         Map<String, String> config = new HashMap<>();
         config.put("cloud_name", name);
         config.put("api_key", apiKey);
@@ -58,7 +32,7 @@ public class CloudAPI {
         return config;
     }
 
-    private Map getUploadConfig(String filename) {
+    private static Map getUploadConfig(String filename) {
         return ObjectUtils.asMap(
                 "public_id", filename,
                 "folder", uploadFolder,
@@ -66,25 +40,42 @@ public class CloudAPI {
                 "resource_type", "auto");
     }
 
-    public Map uploadFile(File file) {
+    public static Map uploadFile(File file) {
         try {
-            Map m = cld.uploader().upload(file, getUploadConfig(file.getName()));
-            System.out.println(m);
-            return m;
+            Cloudinary cld = new Cloudinary(getConfig());
+            Map uploadResult = cld.uploader().upload(file, getUploadConfig(file.getName()));
+            System.out.println(uploadResult);
+            return uploadResult;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public Map uploadFile(String filename, byte[] bytes) {
+    public static Map uploadFile(String filename, byte[] bytes) {
         try {
-            Map m = cld.uploader().upload(bytes, getUploadConfig(filename));
-            System.out.println(m);
-            return m;
+            Cloudinary cld = new Cloudinary(getConfig());
+            Map uploadResult = cld.uploader().upload(bytes, getUploadConfig(filename));
+            System.out.println(uploadResult);
+            return uploadResult;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static void init() {
+        InputStream inputStream = CloudAPI.class.getResourceAsStream("/config/cloudinary.properties");
+        Properties props = new Properties();
+        try {
+            props.load(inputStream);
+            name = props.getProperty("CLOUD_NAME", name);
+            apiKey = props.getProperty("CLOUD_API_KEY", apiKey);
+            apiSecret = props.getProperty("CLOUD_API_SECRET", apiSecret);
+            uploadFolder = props.getProperty("CLOUD_UPLOAD_FOLDER", uploadFolder);
+        } catch (IOException e) {
+            System.out.println("CANNOT LOAD CONFIG FILE. PROGRAM WILL SHUT DOWN !!!");
+            exit();
         }
     }
 }
