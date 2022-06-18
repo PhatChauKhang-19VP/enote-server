@@ -1,15 +1,10 @@
 package pck.enote_server.be.server;
 
 import pck.enote_server.api.API;
-import pck.enote_server.api.req.BaseReq;
-import pck.enote_server.api.req.REQUEST_TYPE;
-import pck.enote_server.api.req.SendFileReq;
-import pck.enote_server.api.req.TestConnectionReq;
-import pck.enote_server.api.res.BaseRes;
-import pck.enote_server.api.res.RESPONSE_STATUS;
-import pck.enote_server.api.res.SendFileRes;
-import pck.enote_server.api.res.TestConnectionRes;
+import pck.enote_server.api.req.*;
+import pck.enote_server.api.res.*;
 import pck.enote_server.cloudinary.CloudAPI;
+import pck.enote_server.db.DatabaseCommunication;
 
 import java.net.Socket;
 import java.util.Map;
@@ -34,6 +29,23 @@ public class Worker extends Thread {
                 TestConnectionReq testConnReq = (TestConnectionReq) req;
                 return new TestConnectionRes(RESPONSE_STATUS.SUCCESS, "Server is now working");
             }
+
+            case SIGN_IN -> {
+                SignInReq signInReq = (SignInReq) req;
+
+                if (DatabaseCommunication.login(signInReq.getUsername(), signInReq.getPassword())) {
+                    return new SignInRes(
+                            RESPONSE_STATUS.SUCCESS,
+                            "Sign in successfully"
+                    );
+                }
+
+                return new SignInRes(
+                        RESPONSE_STATUS.FAILED,
+                        "Sign in failed"
+                );
+            }
+
             case UPLOAD -> {
                 SendFileReq sendFileReq = (SendFileReq) req;
                 Map result = CloudAPI.uploadFile(sendFileReq.getFilename(), sendFileReq.getBuffer());
