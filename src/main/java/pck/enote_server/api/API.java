@@ -1,13 +1,7 @@
 package pck.enote_server.api;
 
-import pck.enote_server.api.req.BaseReq;
-import pck.enote_server.api.req.REQUEST_TYPE;
-import pck.enote_server.api.req.SendFileReq;
-import pck.enote_server.api.req.TestConnectionReq;
-import pck.enote_server.api.res.BaseRes;
-import pck.enote_server.api.res.RESPONSE_STATUS;
-import pck.enote_server.api.res.SendFileRes;
-import pck.enote_server.api.res.TestConnectionRes;
+import pck.enote_server.api.req.*;
+import pck.enote_server.api.res.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -30,6 +24,15 @@ public class API {
                 case TEST_CONNECTION -> {
                     return new TestConnectionReq();
                 }
+
+                case SIGN_UP -> {
+                    // read username & password
+                    String username = dataIn.readUTF();
+                    String password = dataIn.readUTF();
+
+                    return new SignUpReq(username, password);
+                }
+
                 case UPLOAD -> {
                     // read filename
                     String filename = dataIn.readUTF();
@@ -68,6 +71,16 @@ public class API {
 
                     return true;
                 }
+
+                case SIGN_UP -> {
+                    SignUpRes signUpRes = (SignUpRes) res;
+                    dataOut.writeUTF(signUpRes.getType().name());
+                    dataOut.writeUTF(signUpRes.getStatus().name());
+                    dataOut.writeUTF(signUpRes.getMsg());
+
+                    return true;
+                }
+
                 case UPLOAD -> {
                     SendFileRes sendFileRes = (SendFileRes)res;
 

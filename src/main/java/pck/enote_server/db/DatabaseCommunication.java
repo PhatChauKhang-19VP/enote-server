@@ -67,4 +67,21 @@ public class DatabaseCommunication {
             return false;
         }
     }
+
+    public static boolean signUp(String username, String password) {
+        try (Connection conn = connect();
+             CallableStatement cstmt = conn.prepareCall("call usp_signup(?, ?, ?)");
+        ) {
+            cstmt.setString(1, username);
+            cstmt.setString(2, password);
+            cstmt.registerOutParameter(3, Types.VARCHAR);
+
+            int row = cstmt.executeUpdate();
+
+            return cstmt.getString(3).equals("true");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
