@@ -45,6 +45,21 @@ public class Worker extends Thread {
                         "Sign in failed"
                 );
             }
+            case SIGN_UP -> {
+                SignUpReq signUpReq = (SignUpReq) req;
+
+                if (DatabaseCommunication.signUp(signUpReq.getUsername(), signUpReq.getPassword())) {
+                    return new SignUpRes(
+                            RESPONSE_STATUS.SUCCESS,
+                            "Sign up successfully"
+                    );
+                }
+
+                return new SignUpRes(
+                        RESPONSE_STATUS.FAILED,
+                        "Sign up failed"
+                );
+            }
 
             case UPLOAD -> {
                 SendFileReq sendFileReq = (SendFileReq) req;

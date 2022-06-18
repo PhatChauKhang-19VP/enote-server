@@ -33,6 +33,15 @@ public class API {
                     return new SignInReq(username, password);
                 }
 
+                case SIGN_UP -> {
+                    // read username & password
+                    String username = dataIn.readUTF();
+                    String password = dataIn.readUTF();
+
+                    return new SignInReq(username, password);
+                    return new SignUpReq(username, password);
+                }
+
                 case UPLOAD -> {
                     // read filename
                     String filename = dataIn.readUTF();
@@ -48,6 +57,7 @@ public class API {
 
                     return new SendFileReq(reqType, filename, buffer);
                 }
+                
                 default -> {
                     return null;
                 }
@@ -77,6 +87,15 @@ public class API {
                     dataOut.writeUTF(signInRes.getType().name());
                     dataOut.writeUTF(signInRes.getStatus().name());
                     dataOut.writeUTF(signInRes.getMsg());
+
+                    return true;
+                }
+                
+                case SIGN_UP -> {
+                    SignUpRes signUpRes = (SignUpRes) res;
+                    dataOut.writeUTF(signUpRes.getType().name());
+                    dataOut.writeUTF(signUpRes.getStatus().name());
+                    dataOut.writeUTF(signUpRes.getMsg());
 
                     return true;
                 }
