@@ -9,7 +9,7 @@ public class SignUpRes extends BaseRes {
 
     @Override
     public String toString() {
-        return "SignInRes{" +
+        return "SignInQueryRes{" +
                 "status=" + status +
                 ", msg='" + msg + '\'' +
                 ", type=" + type +

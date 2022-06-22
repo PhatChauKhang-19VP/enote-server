@@ -5,8 +5,10 @@ import pck.enote_server.api.req.*;
 import pck.enote_server.api.res.*;
 import pck.enote_server.cloudinary.CloudAPI;
 import pck.enote_server.db.DatabaseCommunication;
+import pck.enote_server.db.DbQueryResult;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class Worker extends Thread {
     private final Client client;
@@ -54,13 +56,7 @@ public class Worker extends Thread {
 
             case SIGN_IN -> {
                 SignInReq signInReq = (SignInReq) req;
-
-                if (DatabaseCommunication.login(signInReq.getUsername(), signInReq.getPassword())) {
-                    client.setUsername(signInReq.getUsername());
-                    Server.clients.put(client.getUsername(), client);
-
-                    System.out.println(Server.clients);
-
+                if (Objects.equals(DatabaseCommunication.signIn(signInReq.getUsername(), signInReq.getPassword()).getStatus(), DbQueryResult.success)) {
                     return new SignInRes(
                             RESPONSE_STATUS.SUCCESS,
                             "Sign in successfully"
@@ -75,7 +71,7 @@ public class Worker extends Thread {
             case SIGN_UP -> {
                 SignUpReq signUpReq = (SignUpReq) req;
 
-                if (DatabaseCommunication.signUp(signUpReq.getUsername(), signUpReq.getPassword())) {
+                if (DatabaseCommunication.signUp(signUpReq.getUsername(), signUpReq.getPassword()).getStatus().equals(DbQueryResult.success)) {
                     return new SignUpRes(
                             RESPONSE_STATUS.SUCCESS,
                             "Sign up successfully"
@@ -92,7 +88,7 @@ public class Worker extends Thread {
                 SendFileReq sendFileReq = (SendFileReq) req;
                 Map result = CloudAPI.uploadFile(sendFileReq.getFilename(), sendFileReq.getBuffer());
 
-                if (result == null){
+                if (result == null) {
                     return API.getErrorRes();
                 }
 
