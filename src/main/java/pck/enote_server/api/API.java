@@ -2,19 +2,19 @@ package pck.enote_server.api;
 
 import pck.enote_server.api.req.*;
 import pck.enote_server.api.res.*;
+import pck.enote_server.be.server.Client;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.net.Socket;
 
 public class API {
 
     public static void main(String[] args) {
     }
 
-    public static BaseReq getClientReq(Socket socket) {
+    public static BaseReq getClientReq(Client client) {
         try {
-            DataInputStream dataIn = new DataInputStream(socket.getInputStream());
+            DataInputStream dataIn = client.getDataIn();
 
             // read type
             REQUEST_TYPE reqType = REQUEST_TYPE.valueOf(dataIn.readUTF());
@@ -66,8 +66,9 @@ public class API {
         }
     }
 
-    public static boolean sendRes(Socket socket, BaseRes res) {
-        try (DataOutputStream dataOut = new DataOutputStream(socket.getOutputStream())) {
+    public static boolean sendRes(Client client, BaseRes res) {
+        try {
+            DataOutputStream dataOut = client.getDataOut();
             REQUEST_TYPE reqType = res.getType();
 
             switch (reqType) {
@@ -129,7 +130,7 @@ public class API {
     public static TestConnectionRes getErrorRes() {
         return new TestConnectionRes(
                 RESPONSE_STATUS.FAILED,
-                "Server bị lỗi");
+                "ServerGUI bị lỗi");
     }
 }
 

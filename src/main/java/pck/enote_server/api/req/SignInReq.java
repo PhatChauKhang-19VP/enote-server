@@ -17,5 +17,14 @@ public class SignInReq extends BaseReq {
     public String getPassword() {
         return password;
     }
+
+    @Override
+    public String toString() {
+        return "SignInReq{" +
+                "type=" + type +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
 

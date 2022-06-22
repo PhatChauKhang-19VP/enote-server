@@ -8,7 +8,7 @@ import java.io.IOException;
 import static javafx.application.Platform.exit;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         DatabaseCommunication.init();
         CloudAPI.init();
         Thread t = new Thread(() -> {
@@ -20,6 +20,6 @@ public class Main {
             }
         });
         t.start();
-        Server.main(args);
+        ServerGUI.main(args);
     }
 }
