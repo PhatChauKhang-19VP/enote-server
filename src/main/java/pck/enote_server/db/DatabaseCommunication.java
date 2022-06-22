@@ -16,7 +16,11 @@ public class DatabaseCommunication {
 
     public static void main(String[] args) {
         init();
+<<<<<<< Updated upstream
         System.out.println(signUp("phat6", "phat6"));
+=======
+        System.out.println(signIn("chau", "chau"));
+>>>>>>> Stashed changes
     }
 
     private static String getURL() {
@@ -44,7 +48,7 @@ public class DatabaseCommunication {
         return DriverManager.getConnection(getURL(), user, password);
     }
 
-    public static boolean login(String username, String password) {
+    public static boolean signIn(String username, String password) {
         try (Connection conn = connect();
              PreparedStatement cstmt = conn.prepareStatement("select fn_login(?, ?)");
         ) {
