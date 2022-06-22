@@ -17,6 +17,7 @@ public class DatabaseCommunication {
     public static void main(String[] args) {
         init();
         System.out.println(signUp("phat6", "phat6"));
+        System.out.println(addNewNote("phat1", "image/pbg", "url test"));
     }
 
     private static String getURL() {
@@ -92,8 +93,8 @@ public class DatabaseCommunication {
             cstmt.setString(1, username);
             cstmt.setString(2, type);
             cstmt.setString(3, noteUri);
-
-            return cstmt.execute();
+            cstmt.execute();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
