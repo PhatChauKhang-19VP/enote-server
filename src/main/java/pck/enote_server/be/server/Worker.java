@@ -6,18 +6,40 @@ import pck.enote_server.api.res.*;
 import pck.enote_server.cloudinary.CloudAPI;
 import pck.enote_server.db.DatabaseCommunication;
 
-import java.net.Socket;
 import java.util.Map;
 
 public class Worker extends Thread {
-    private final Socket socket;
+    private final Client client;
 
-    public Worker(Socket socket) {
-        this.socket = socket;
+    public Worker(Client client) {
+        this.client = client;
+    }
+
+    //Handle client request and send response to client
+    public void run() {
+        System.out.println("Processing: " + client.getSocket());
+
+        while (client.getSocket() != null && !client.getSocket().isClosed()){
+            BaseRes res =  handleClientRequest();
+            if (res == null) {
+                break;
+            }
+            System.out.println(res);
+
+            //Send response to client
+            API.sendRes(client, res);
+
+            System.out.println("worker sent RES and keep looping");
+        }
+        Server.clients.remove(client.getUsername());
+        System.out.println("worker end: " + client.getSocket());
     }
 
     private BaseRes handleClientRequest() {
-        BaseReq req = API.getClientReq(socket);
+        BaseReq req = API.getClientReq(client);
+
+        System.out.println("Worker.getClientReq = " + req);
+
         if (req == null) {
             return null;
         }
@@ -34,6 +56,11 @@ public class Worker extends Thread {
                 SignInReq signInReq = (SignInReq) req;
 
                 if (DatabaseCommunication.login(signInReq.getUsername(), signInReq.getPassword())) {
+                    client.setUsername(signInReq.getUsername());
+                    Server.clients.put(client.getUsername(), client);
+
+                    System.out.println(Server.clients);
+
                     return new SignInRes(
                             RESPONSE_STATUS.SUCCESS,
                             "Sign in successfully"
@@ -79,19 +106,5 @@ public class Worker extends Thread {
                 return API.getErrorRes();
             }
         }
-    }
-
-    //Handle client request and send response to client
-    public void run() {
-        System.out.println("Processing: " + socket);
-
-        //
-        BaseRes res =  handleClientRequest();
-
-        System.out.println(res);
-        //Send response to client
-        API.sendRes(socket, res);
-
-        System.out.println("Complete processing: " + socket);
     }
 }

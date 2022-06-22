@@ -159,7 +159,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>pck.enote.Main</mainClass>
+                                    <mainClass>pck.enote_server.Main</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
