@@ -10,4 +10,11 @@ public abstract class BaseReq {
     public REQUEST_TYPE getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "BaseReq{" +
+                "type=" + type +
+                '}';
+    }
 }
