@@ -16,16 +16,9 @@ public class DatabaseCommunication {
 
     public static void main(String[] args) {
         init();
-<<<<<<< Updated upstream
-        System.out.println(signUp("phat6", "phat6"));
-=======
-        System.out.println(signIn("chau", "chau"));
->>>>>>> Stashed changes
-    }
+        System.out.println(signIn("phatnguqqq1111", "12345"));
 
-    private static String getURL() {
-        String urlStringFormat = "jdbc:postgresql://%s:%s/%s?sslmode=require";
-        return String.format(urlStringFormat, host, port, dbName);
+        System.out.println(signUp("phatnguqqq1111", "12345"));
     }
 
     public static void init() {
@@ -44,48 +37,52 @@ public class DatabaseCommunication {
         }
     }
 
-    public static Connection connect() throws SQLException {
-        return DriverManager.getConnection(getURL(), user, password);
-    }
-
-    public static boolean signIn(String username, String password) {
+    public static DbQueryResult.SignIn signIn(String username, String password) {
         try (Connection conn = connect();
-             PreparedStatement cstmt = conn.prepareStatement("select fn_login(?, ?)");
-        ) {
-            cstmt.setString(1, username);
-            cstmt.setString(2, password);
-            cstmt.execute();
-
-            boolean result = cstmt.execute();
-
-            if (result) {
-                ResultSet rs = cstmt.getResultSet();
-
-                while (rs.next()) {
-                    System.out.println(rs.getString(1));
-                }
-            }
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public static boolean signUp(String username, String password) {
-        try (Connection conn = connect();
-             CallableStatement cstmt = conn.prepareCall("call usp_signup(?, ?, ?)");
+             CallableStatement cstmt = conn.prepareCall("call usp_signIn(?, ?, ?, ?)");
         ) {
             cstmt.setString(1, username);
             cstmt.setString(2, password);
             cstmt.registerOutParameter(3, Types.VARCHAR);
+            cstmt.registerOutParameter(4, Types.VARCHAR);
+            cstmt.executeUpdate();
 
-            int row = cstmt.executeUpdate();
+            String status = cstmt.getString(3);
+            String msg = cstmt.getString(4);
 
-            return cstmt.getString(3).equals("true");
+            return new DbQueryResult.SignIn(status, msg);
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return new DbQueryResult.SignIn(DbQueryResult.failed, "Lỗi khi giao tiếp với db");
+        }
+    }
+
+    public static Connection connect() throws SQLException {
+        return DriverManager.getConnection(getURL(), user, password);
+    }
+
+    private static String getURL() {
+        String urlStringFormat = "jdbc:postgresql://%s:%s/%s?sslmode=require";
+        return String.format(urlStringFormat, host, port, dbName);
+    }
+
+    public static DbQueryResult.SignUp signUp(String username, String password) {
+        try (Connection conn = connect();
+             CallableStatement cstmt = conn.prepareCall("call usp_signIn(?, ?, ?, ?)");
+        ) {
+            cstmt.setString(1, username);
+            cstmt.setString(2, password);
+            cstmt.registerOutParameter(3, Types.VARCHAR);
+            cstmt.registerOutParameter(4, Types.VARCHAR);
+            cstmt.executeUpdate();
+
+            String status = cstmt.getString(3);
+            String msg = cstmt.getString(4);
+
+            return new DbQueryResult.SignUp(status, msg);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new DbQueryResult.SignUp(DbQueryResult.failed, "Lỗi khi giao tiếp với db");
         }
     }
 

@@ -5,15 +5,31 @@ import pck.enote_server.api.req.*;
 import pck.enote_server.api.res.*;
 import pck.enote_server.cloudinary.CloudAPI;
 import pck.enote_server.db.DatabaseCommunication;
+import pck.enote_server.db.DbQueryResult;
 
 import java.net.Socket;
 import java.util.Map;
+import java.util.Objects;
 
 public class Worker extends Thread {
     private final Socket socket;
 
     public Worker(Socket socket) {
         this.socket = socket;
+    }
+
+    //Handle client request and send response to client
+    public void run() {
+        System.out.println("Processing: " + socket);
+
+        //
+        BaseRes res = handleClientRequest();
+
+        System.out.println(res);
+        //Send response to client
+        API.sendRes(socket, res);
+
+        System.out.println("Complete processing: " + socket);
     }
 
     private BaseRes handleClientRequest() {
@@ -32,8 +48,7 @@ public class Worker extends Thread {
 
             case SIGN_IN -> {
                 SignInReq signInReq = (SignInReq) req;
-
-                if (DatabaseCommunication.login(signInReq.getUsername(), signInReq.getPassword())) {
+                if (Objects.equals(DatabaseCommunication.signIn(signInReq.getUsername(), signInReq.getPassword()).getStatus(), DbQueryResult.success)) {
                     return new SignInRes(
                             RESPONSE_STATUS.SUCCESS,
                             "Sign in successfully"
@@ -48,7 +63,7 @@ public class Worker extends Thread {
             case SIGN_UP -> {
                 SignUpReq signUpReq = (SignUpReq) req;
 
-                if (DatabaseCommunication.signUp(signUpReq.getUsername(), signUpReq.getPassword())) {
+                if (DatabaseCommunication.signUp(signUpReq.getUsername(), signUpReq.getPassword()).getStatus().equals(DbQueryResult.success)) {
                     return new SignUpRes(
                             RESPONSE_STATUS.SUCCESS,
                             "Sign up successfully"
@@ -65,7 +80,7 @@ public class Worker extends Thread {
                 SendFileReq sendFileReq = (SendFileReq) req;
                 Map result = CloudAPI.uploadFile(sendFileReq.getFilename(), sendFileReq.getBuffer());
 
-                if (result == null){
+                if (result == null) {
                     return API.getErrorRes();
                 }
 
@@ -79,19 +94,5 @@ public class Worker extends Thread {
                 return API.getErrorRes();
             }
         }
-    }
-
-    //Handle client request and send response to client
-    public void run() {
-        System.out.println("Processing: " + socket);
-
-        //
-        BaseRes res =  handleClientRequest();
-
-        System.out.println(res);
-        //Send response to client
-        API.sendRes(socket, res);
-
-        System.out.println("Complete processing: " + socket);
     }
 }
