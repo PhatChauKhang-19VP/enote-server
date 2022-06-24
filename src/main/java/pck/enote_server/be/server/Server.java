@@ -5,7 +5,6 @@ import javafx.application.Platform;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,7 +24,7 @@ public class Server {
             System.out.println("ServerGUI started: " + serverSocket);
             System.out.println("Waiting for a client …");
 
-            while (true) {
+            while (!Platform.isImplicitExit()) {
                 try {
                     //Listen to client's connection request
                     Socket socket = serverSocket.accept();
