@@ -1,5 +1,7 @@
 package pck.enote_server.be.server;
 
+import javafx.application.Platform;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,7 +14,7 @@ public class Server {
     public final static int SERVER_PORT = 7;
     public static HashMap<String, Client> clients = new HashMap<>();
 
-    public static void main(String[] args) throws IOException {
+    public static void main() throws IOException {
         ExecutorService executor = Executors.newFixedThreadPool(NUM_OF_THREAD);
         ServerSocket serverSocket = null;
 
@@ -22,7 +24,7 @@ public class Server {
             System.out.println("ServerGUI started: " + serverSocket);
             System.out.println("Waiting for a client …");
 
-            while (true) {
+            while (!Platform.isImplicitExit()) {
                 try {
                     //Listen to client's connection request
                     Socket socket = serverSocket.accept();

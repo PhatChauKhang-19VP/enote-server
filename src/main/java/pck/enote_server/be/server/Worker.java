@@ -1,5 +1,7 @@
 package pck.enote_server.be.server;
 
+import javafx.application.Platform;
+import pck.enote_server.ServerGUI;
 import pck.enote_server.api.API;
 import pck.enote_server.api.req.*;
 import pck.enote_server.api.res.*;
@@ -45,6 +47,10 @@ public class Worker extends Thread {
         if (req == null) {
             return null;
         }
+
+        Platform.runLater(() -> {
+            ServerGUI.addNewReqToList(req.toString());
+        });
 
         REQUEST_TYPE reqType = req.getType();
 

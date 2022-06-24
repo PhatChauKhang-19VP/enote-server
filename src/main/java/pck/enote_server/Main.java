@@ -5,21 +5,17 @@ import pck.enote_server.db.DatabaseCommunication;
 
 import java.io.IOException;
 
-import static javafx.application.Platform.exit;
-
 public class Main {
     public static void main(String[] args) {
         DatabaseCommunication.init();
         CloudAPI.init();
-        Thread t = new Thread(() -> {
+        new Thread(() -> {
             try {
-                pck.enote_server.be.server.Server.main(args);
+                pck.enote_server.be.server.Server.main();
             } catch (IOException e) {
                 e.printStackTrace();
-                exit();
             }
-        });
-        t.start();
+        }).start();
         ServerGUI.main(args);
     }
 }

@@ -8,9 +8,9 @@ import java.util.Properties;
 import static javafx.application.Platform.exit;
 
 public class ScreenConfig {
-    private static String width = "600";
-    private static String height = "400";
-    private static String title = "SOCKET by PCK group";
+    private static String width = "800";
+    private static String height = "600";
+    private static String title = "Enote server by PCK group";
     private static String logoPath = "static/images/PCK-logo.png";
 
     private static boolean isInit = false;
