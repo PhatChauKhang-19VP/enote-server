@@ -17,4 +17,6 @@ module pck.enoteserver {
     exports pck.enote_server;
     exports pck.enote_server.api.req;
     opens pck.enote_server.api.req to javafx.fxml;
+    exports pck.enote_server.controller;
+    opens pck.enote_server.controller to javafx.fxml;
 }
