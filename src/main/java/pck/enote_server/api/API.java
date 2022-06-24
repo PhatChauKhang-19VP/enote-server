@@ -3,9 +3,11 @@ package pck.enote_server.api;
 import pck.enote_server.api.req.*;
 import pck.enote_server.api.res.*;
 import pck.enote_server.be.server.Client;
+import pck.enote_server.model.Note;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.util.HashMap;
 
 public class API {
 
@@ -107,6 +109,24 @@ public class API {
                     dataOut.writeUTF(sendFileRes.getStatus().name());
                     dataOut.writeUTF(sendFileRes.getMsg());
                     dataOut.writeUTF(sendFileRes.getFileUrl());
+
+                    return true;
+                }
+                case GET_NOTE_LIST -> {
+                    GetNoteListRes getNoteListRes = (GetNoteListRes) res;
+                    dataOut.writeUTF(getNoteListRes.getType().name());
+                    dataOut.writeUTF(getNoteListRes.getStatus().name());
+                    dataOut.writeUTF(getNoteListRes.getMsg());
+
+                    HashMap<Integer, Note> notes = getNoteListRes.getNoteList();
+                    dataOut.writeInt(notes.size());
+                    for (Integer key : notes.keySet()) {
+                        Note note = notes.get(key);
+                        dataOut.writeInt(note.getId());
+                        dataOut.writeUTF(note.getType());
+                        dataOut.writeUTF(note.getUri());
+                        dataOut.writeUTF(note.getCreatedAt());
+                    }
 
                     return true;
                 }

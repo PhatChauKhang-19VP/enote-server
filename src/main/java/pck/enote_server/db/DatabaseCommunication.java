@@ -1,8 +1,11 @@
 package pck.enote_server.db;
 
+import pck.enote_server.model.Note;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
+import java.util.HashMap;
 import java.util.Properties;
 
 import static javafx.application.Platform.exit;
@@ -94,6 +97,25 @@ public class DatabaseCommunication {
             cstmt.setString(2, type);
             cstmt.setString(3, noteUri);
             cstmt.execute();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean getNoteList(String username, HashMap<Integer, Note> noteList) {
+        try (Connection conn = connect();
+             CallableStatement cstmt = conn.prepareCall("call usp_get_note_list(?)");
+        ) {
+//            cstmt.setString(1, username);
+//
+//            boolean result = cstmt.execute();
+//            if (result) {
+//                ResultSet rs = cstmt.getResultSet();
+//            }
+            noteList.put(1, new Note(1, "test", "test", "test"));
+            noteList.put(2, new Note(2, "test", "test", "test"));
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
