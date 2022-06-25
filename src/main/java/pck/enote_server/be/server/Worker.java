@@ -23,8 +23,8 @@ public class Worker extends Thread {
     public void run() {
         System.out.println("Processing: " + client.getSocket());
 
-        while (client.getSocket() != null && !client.getSocket().isClosed()){
-            BaseRes res =  handleClientRequest();
+        while (client.getSocket() != null && !client.getSocket().isClosed()) {
+            BaseRes res = handleClientRequest();
             if (res == null) {
                 break;
             }
@@ -108,9 +108,16 @@ public class Worker extends Thread {
 
                 return new GetNoteListRes(
                         RESPONSE_STATUS.SUCCESS,
-                        "retrieve notes successfully",
+                        "retrieve note list successfully",
                         noteList
                 );
+            }
+
+            case GET_NOTE -> {
+                GetNoteReq getNoteReq = (GetNoteReq) req;
+                Note note = new Note();
+                DatabaseCommunication.getNote(getNoteReq.getUsername(), getNoteReq.getNoteId(), note);
+                return new GetNoteRes(RESPONSE_STATUS.SUCCESS, "retrieve note successfully", note);
             }
 
             default -> {
