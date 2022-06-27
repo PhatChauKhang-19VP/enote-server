@@ -19,7 +19,7 @@
                         <Font size="24.0" />
                     </font>
                 </Label>
-                <TextField fx:id="tfIP" alignment="CENTER" disable="true" editable="false" layoutX="99.0" layoutY="25.0" prefHeight="50.0" prefWidth="200.0" text="999.999.999.999">
+                <TextField fx:id="tfIP" alignment="CENTER" editable="false" layoutX="99.0" layoutY="25.0" prefHeight="50.0" prefWidth="200.0" text="999.999.999.999">
                     <font>
                         <Font size="24.0" />
                     </font>
@@ -39,7 +39,7 @@
                         <Font size="24.0" />
                     </font>
                 </Label>
-                <TextField fx:id="tfPort" alignment="CENTER" disable="true" editable="false" layoutX="320.0" layoutY="25.0" prefHeight="51.0" prefWidth="100.0" text="99999">
+                <TextField fx:id="tfPort" alignment="CENTER" editable="false" layoutX="320.0" layoutY="25.0" prefHeight="51.0" prefWidth="100.0" text="99999">
                     <font>
                         <Font size="24.0" />
                     </font>

@@ -23,7 +23,7 @@ public class Worker extends Thread {
     public void run() {
         System.out.println("Processing: " + client.getSocket());
 
-        while (client.getSocket() != null && !client.getSocket().isClosed()){
+        while (!Server.getServerSocket().isClosed() && client.getSocket() != null && !client.getSocket().isClosed()){
             BaseRes res =  handleClientRequest();
             if (res == null) {
                 break;
@@ -31,16 +31,19 @@ public class Worker extends Thread {
             System.out.println(res);
 
             //Send response to client
-            API.sendRes(client, res);
+            API.sendRes(client.getSocket(), res);
 
             System.out.println("worker sent RES and keep looping");
         }
-        Server.clients.remove(client.getUsername());
+        Server.clients.remove(client.getSocket().getPort());
+        Platform.runLater(() -> {
+            ServerGUI.removeClient(client);
+        });
         System.out.println("worker end: " + client.getSocket());
     }
 
     private BaseRes handleClientRequest() {
-        BaseReq req = API.getClientReq(client);
+        BaseReq req = API.getClientReq(client.getSocket());
 
         System.out.println("Worker.getClientReq = " + req);
 
