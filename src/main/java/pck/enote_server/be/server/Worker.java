@@ -31,7 +31,7 @@ public class Worker extends Thread {
             System.out.println(res);
 
             //Send response to client
-            API.sendRes(client.getSocket(), res);
+            API.sendRes(client, res);
 
             System.out.println("worker sent RES and keep looping");
         }
@@ -43,7 +43,7 @@ public class Worker extends Thread {
     }
 
     private BaseRes handleClientRequest() {
-        BaseReq req = API.getClientReq(client.getSocket());
+        BaseReq req = API.getClientReq(client);
 
         System.out.println("Worker.getClientReq = " + req);
 

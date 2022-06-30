@@ -72,11 +72,9 @@ public class Server {
         thread.start();
     }
 
-    public static void stop() {
+    public static void stop(){
         try {
-            if (serverSocket != null && !serverSocket.isClosed()) {
-                serverSocket.close();
-            }
+            serverSocket.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

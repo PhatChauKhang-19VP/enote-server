@@ -51,6 +51,22 @@ public class ServerGUI extends Application {
         }
     }
 
+    public static Parent replaceSceneContent(String fxml, int width, int height) throws Exception {
+        FXMLLoader loader = new FXMLLoader(ServerGUI.class.getResource(fxml), null, new JavaFXBuilderFactory());
+
+        Parent page = loader.load();
+
+        ServerGUI.fxmlLoader = loader;
+
+
+        Scene scene = new Scene(page, width, height);
+        stage.setScene(scene);
+
+        stage.sizeToScene();
+        stage.show();
+        return page;
+    }
+
     @Override
     public void start(Stage primaryStage) {
         Platform.runLater(() -> {
@@ -82,21 +98,5 @@ public class ServerGUI extends Application {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-    public static Parent replaceSceneContent(String fxml, int width, int height) throws Exception {
-        FXMLLoader loader = new FXMLLoader(ServerGUI.class.getResource(fxml), null, new JavaFXBuilderFactory());
-
-        Parent page = loader.load();
-
-        ServerGUI.fxmlLoader = loader;
-
-
-        Scene scene = new Scene(page, width, height);
-        stage.setScene(scene);
-
-        stage.sizeToScene();
-        stage.show();
-        return page;
     }
 }
