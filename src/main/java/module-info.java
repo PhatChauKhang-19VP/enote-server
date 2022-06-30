@@ -12,6 +12,7 @@ module pck.enoteserver {
     requires java.sql;
     requires org.postgresql.jdbc;
     requires cloudinary.core;
+    requires org.apache.commons.io;
 
     opens pck.enote_server to javafx.fxml;
     exports pck.enote_server;

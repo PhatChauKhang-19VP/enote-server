@@ -8,7 +8,9 @@ import pck.enote_server.api.res.*;
 import pck.enote_server.cloudinary.CloudAPI;
 import pck.enote_server.db.DatabaseCommunication;
 import pck.enote_server.db.DbQueryResult;
+import pck.enote_server.model.Note;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -107,6 +109,26 @@ public class Worker extends Thread {
                         (String) result.get("secure_url")
                 );
             }
+
+            case GET_NOTE_LIST -> {
+                GetNoteListReq getNoteListReq = (GetNoteListReq) req;
+                HashMap<Integer, Note> noteList = new HashMap<>();
+                DatabaseCommunication.getNoteList(getNoteListReq.getUsername(), noteList);
+
+                return new GetNoteListRes(
+                        RESPONSE_STATUS.SUCCESS,
+                        "retrieve note list successfully",
+                        noteList
+                );
+            }
+
+            case GET_NOTE -> {
+                GetNoteReq getNoteReq = (GetNoteReq) req;
+                Note note = new Note();
+                DatabaseCommunication.getNote(getNoteReq.getUsername(), getNoteReq.getNoteId(), note);
+                return new GetNoteRes(RESPONSE_STATUS.SUCCESS, "retrieve note successfully", note);
+            }
+
             default -> {
                 return API.getErrorRes();
             }

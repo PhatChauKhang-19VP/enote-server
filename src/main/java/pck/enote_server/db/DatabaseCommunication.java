@@ -1,8 +1,13 @@
 package pck.enote_server.db;
 
+import pck.enote_server.model.Note;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Properties;
 
 import static javafx.application.Platform.exit;
@@ -16,9 +21,15 @@ public class DatabaseCommunication {
 
     public static void main(String[] args) {
         init();
-        System.out.println(signIn("phat6", "phat6"));
-        System.out.println(signUp("phatnguqqq1111", "12345"));
-        System.out.println(addNewNote("phat1", "image/pbg", "url test"));
+//        System.out.println(signIn("phat6", "phat6"));
+//        System.out.println(signUp("phatnguqqq1111", "12345"));
+//        System.out.println(addNewNote("phat1", "image/pbg", "url test"));
+//        HashMap<Integer, Note> map = new HashMap<Integer, Note>();
+//        getNoteList("phat1", map);
+//        System.out.println(map);
+        Note note = new Note();
+        getNote("phat1", 0, note);
+        System.out.println(note);
     }
 
     public static void init() {
@@ -94,6 +105,56 @@ public class DatabaseCommunication {
             cstmt.setString(2, type);
             cstmt.setString(3, noteUri);
             cstmt.execute();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean getNoteList(String username, HashMap<Integer, Note> noteList) {
+        try (Connection conn = connect();
+             CallableStatement cstmt = conn.prepareCall("select * from users_note where username = ?");
+        ) {
+            cstmt.setString(1, username);
+
+            boolean result = cstmt.execute();
+            if (result) {
+                ResultSet rs = cstmt.getResultSet();
+                while (rs.next()) {
+                    noteList.put(
+                            rs.getInt("id"),
+                            new Note(
+                                    rs.getInt("id"),
+                                    rs.getString("type"),
+                                    rs.getString("data_uri"),
+                                    String.valueOf(rs.getTimestamp("create_at").toLocalDateTime())
+                            )
+                    );
+                }
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean getNote(String username, Integer noteID, Note note) {
+        try (
+                Connection conn = connect();
+                CallableStatement cstmt = conn.prepareCall("select * from users_note where username = ? and id = ?")
+        ) {
+            cstmt.setString(1, username);
+            cstmt.setInt(2, noteID);
+            cstmt.execute();
+            ResultSet rs = cstmt.getResultSet();
+            while (rs.next()) {
+                note.setId(rs.getInt("id"));
+                note.setType(rs.getString("type"));
+                note.setUri(rs.getString("data_uri"));
+                note.setCreatedAt(String.valueOf(rs.getTimestamp("create_at").toLocalDateTime()));
+            }
             return true;
         } catch (SQLException e) {
             e.printStackTrace();

@@ -3,9 +3,13 @@ package pck.enote_server.api;
 import pck.enote_server.api.req.*;
 import pck.enote_server.api.res.*;
 import pck.enote_server.be.server.Client;
+import pck.enote_server.helper.FileHelper;
+import pck.enote_server.model.Note;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.util.HashMap;
 
 public class API {
 
@@ -56,7 +60,18 @@ public class API {
 
                     return new SendFileReq(reqType, filename, buffer);
                 }
-                
+
+                case GET_NOTE_LIST -> {
+                    String username = dataIn.readUTF();
+                    return new GetNoteListReq(username);
+                }
+
+                case GET_NOTE -> {
+                    String username = dataIn.readUTF();
+                    Integer noteId = dataIn.readInt();
+                    return new GetNoteReq(username, noteId);
+                }
+
                 default -> {
                     return null;
                 }
@@ -90,7 +105,7 @@ public class API {
 
                     return true;
                 }
-                
+
                 case SIGN_UP -> {
                     SignUpRes signUpRes = (SignUpRes) res;
                     dataOut.writeUTF(signUpRes.getType().name());
@@ -110,6 +125,46 @@ public class API {
 
                     return true;
                 }
+                case GET_NOTE_LIST -> {
+                    GetNoteListRes getNoteListRes = (GetNoteListRes) res;
+                    dataOut.writeUTF(getNoteListRes.getType().name());
+                    dataOut.writeUTF(getNoteListRes.getStatus().name());
+                    dataOut.writeUTF(getNoteListRes.getMsg());
+
+                    HashMap<Integer, Note> notes = getNoteListRes.getNoteList();
+                    dataOut.writeInt(notes.size());
+                    for (Integer key : notes.keySet()) {
+                        Note note = notes.get(key);
+                        dataOut.writeInt(note.getId());
+                        dataOut.writeUTF(note.getType());
+                        dataOut.writeUTF(note.getUri());
+                        dataOut.writeUTF(note.getCreatedAt());
+                    }
+
+                    return true;
+                }
+
+                case GET_NOTE -> {
+                    GetNoteRes getNoteRes = (GetNoteRes) res;
+                    dataOut.writeUTF(getNoteRes.getType().name());
+                    dataOut.writeUTF(getNoteRes.getStatus().name());
+                    dataOut.writeUTF(getNoteRes.getMsg());
+
+                    // write note info
+                    Note note = getNoteRes.getNote();
+                    dataOut.writeInt(note.getId());
+                    dataOut.writeUTF(note.getType());
+                    dataOut.writeUTF(note.getUri());
+                    dataOut.writeUTF(note.getCreatedAt());
+
+                    byte[] buffer = FileHelper.getFileBufferFromURL(note.getUri());
+                    System.out.println(buffer);
+                    dataOut.writeInt(buffer.length);
+                    dataOut.write(buffer);
+
+                    return true;
+                }
+
                 default -> {
                     BaseRes errRes = getErrorRes();
 
