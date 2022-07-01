@@ -27,6 +27,13 @@ public class Server {
     }
 
     public static boolean create() {
+        if (serverSocket != null && !serverSocket.isClosed()){
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         try {
             System.out.println("Binding to port " + SERVER_PORT + ", please wait …");
             serverSocket = new ServerSocket(SERVER_PORT);
@@ -72,11 +79,13 @@ public class Server {
         thread.start();
     }
 
-    public static void stop(){
-        try {
-            serverSocket.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static void stop() {
+        if (serverSocket != null && !serverSocket.isClosed()) {
+            try {
+                serverSocket.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
