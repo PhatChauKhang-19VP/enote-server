@@ -2,20 +2,33 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="50.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/18"
+            prefHeight="50.0" prefWidth="200.0"
+            style="-fx-border-color: #000; -fx-border-width: 0 0 1 0;" xmlns="http://javafx.com/javafx/17"
             fx:controller="pck.enote_server.controller.ClientPaneController">
-    <children>
-        <Label fx:id="username" prefHeight="50.0" prefWidth="200.0"
-               style="-fx-border-color: #000; -fx-border-width: 0 0 1 0;" text="Label">
-            <font>
-                <Font size="14.0"/>
-            </font>
-            <padding>
-                <Insets left="5.0" right="5.0"/>
-            </padding>
-        </Label>
-    </children>
+    <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="10.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="https://res.cloudinary.com/pck-group/image/upload/v1655628901/MMT/enote/images/ethernet_scvhsm.png"/>
+    </ImageView>
+    <Label fx:id="lblPort" layoutX="40.0" prefHeight="20.0" prefWidth="160.0" text="99999">
+        <font>
+          <Font size="14.0"/>
+        </font>
+        <padding>
+          <Insets left="5.0" right="5.0"/>
+        </padding>
+    </Label>
+    <Label fx:id="lblUsername" alignment="CENTER_RIGHT" layoutY="20.0" prefHeight="30.0" prefWidth="200.0"
+           text="username-unknown">
+        <font>
+            <Font size="14.0"/>
+        </font>
+        <padding>
+            <Insets left="5.0" right="5.0"/>
+        </padding>
+    </Label>
 </AnchorPane>

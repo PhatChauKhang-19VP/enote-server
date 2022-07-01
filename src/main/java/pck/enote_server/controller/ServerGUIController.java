@@ -1,5 +1,6 @@
 package pck.enote_server.controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -62,21 +63,24 @@ public class ServerGUIController implements Initializable {
     }
 
     public void addNewClient(Client client) {
-        // add new client to client list
-        try {
-            FXMLLoader fxmlLoaderClient = new FXMLLoader();
-            fxmlLoaderClient.setLocation(ServerGUI.class.getResource("ClientPane.fxml"));
-            AnchorPane clientPane = fxmlLoaderClient.load();
-            ClientPaneController ctrl = fxmlLoaderClient.getController();
-            ctrl.username.setText(client.getUsername());
+        Platform.runLater(() -> {
+            // add new client to client list
+            try {
+                FXMLLoader fxmlLoaderClient = new FXMLLoader();
+                fxmlLoaderClient.setLocation(ServerGUI.class.getResource("ClientPane.fxml"));
+                AnchorPane clientPane = fxmlLoaderClient.load();
+                ClientPaneController ctrl = fxmlLoaderClient.getController();
+                ctrl.lblPort.setText(String.valueOf(client.getSocket().getPort()));
+                ctrl.lblUsername.textProperty().bind(client.usernameProperty());
 
-            clientItemList.put(client.getSocket().getPort(), clientPane);
+                clientItemList.put(client.getSocket().getPort(), clientPane);
 
-            vbClientList.getChildren().addAll(clientItemList.values());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        lblConnectingClient.setText(String.valueOf(clientItemList.size()));
+                vbClientList.getChildren().addAll(clientItemList.values());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            lblConnectingClient.setText(String.valueOf(clientItemList.size()));
+        });
     }
 
     public void removeClient(Client client) {

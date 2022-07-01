@@ -68,6 +68,11 @@ public class Worker extends Thread {
             case SIGN_IN -> {
                 SignInReq signInReq = (SignInReq) req;
                 if (Objects.equals(DatabaseCommunication.signIn(signInReq.getUsername(), signInReq.getPassword()).getStatus(), DbQueryResult.success)) {
+                    //update username in display list
+                    Platform.runLater(() -> {
+                        client.setUsername(signInReq.getUsername());
+                    });
+
                     return new SignInRes(
                             RESPONSE_STATUS.SUCCESS,
                             "Sign in successfully"

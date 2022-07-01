@@ -2,12 +2,12 @@ package pck.enote_server.helper;
 
 import org.apache.commons.io.IOUtils;
 
-import java.io.*;
-import java.net.MalformedURLException;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
-import java.util.Arrays;
 
 public class FileHelper {
     public static byte[] getFileBuffer(File file) {

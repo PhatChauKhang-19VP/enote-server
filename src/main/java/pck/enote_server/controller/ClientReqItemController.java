@@ -12,6 +12,7 @@ public class ClientReqItemController implements Initializable {
     public Label reqContent;
     public Label lblDate;
     public Label lblTime;
+    public Label lblPort;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

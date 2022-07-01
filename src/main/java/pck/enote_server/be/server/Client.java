@@ -1,5 +1,8 @@
 package pck.enote_server.be.server;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -7,23 +10,13 @@ import java.net.Socket;
 
 public class Client {
     private final Socket socket;
-    private String username;
+    private final StringProperty username;
     private DataInputStream dataIn;
     private DataOutputStream dataOut;
     public Client(Socket socket) {
-        this.username = "unknown";
-        this.socket = socket;
+        username = new SimpleStringProperty();
 
-        try {
-            dataIn = new DataInputStream(socket.getInputStream());
-            dataOut = new DataOutputStream(socket.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Client(String username, Socket socket) {
-        this.username = username;
+        username.setValue("unknown" + socket.getPort());
         this.socket = socket;
 
         try {
@@ -35,11 +28,15 @@ public class Client {
     }
 
     public String getUsername() {
-        return username;
+        return username.get();
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username.setValue(username);
+    }
+
+    public StringProperty usernameProperty() {
+        return username;
     }
 
     public Socket getSocket() {
@@ -50,7 +47,15 @@ public class Client {
         return dataIn;
     }
 
+    public void setDataIn(DataInputStream dataIn) {
+        this.dataIn = dataIn;
+    }
+
     public DataOutputStream getDataOut() {
         return dataOut;
+    }
+
+    public void setDataOut(DataOutputStream dataOut) {
+        this.dataOut = dataOut;
     }
 }

@@ -1,6 +1,5 @@
 package pck.enote_server.be.server;
 
-import javafx.application.Platform;
 import pck.enote_server.ServerGUI;
 
 import java.io.IOException;
@@ -58,9 +57,7 @@ public class Server {
                         Client client = new Client(socket);
                         clients.put(socket.getPort(), client);
 
-                        Platform.runLater(() -> {
-                            ServerGUI.addNewClient(client);
-                        });
+                        ServerGUI.addNewClient(client);
 
                         System.out.println("Number of client: " + clients.size());
                         System.out.println("Client accepted: " + socket);

@@ -2,34 +2,39 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefWidth="560.0"
-            style="-fx-border-color: #000; -fx-border-width: 0 0 1 0;" xmlns="http://javafx.com/javafx/18"
+
+<AnchorPane prefWidth="560.0" style="-fx-border-color: #000; -fx-border-width: 0 0 1 0;"
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="pck.enote_server.controller.ClientReqItemController">
-    <children>
-        <Label fx:id="reqContent" layoutX="100.0" prefHeight="50.0" prefWidth="462.0"
-               text="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officia voluptatem nobis culpa omnis cupiditate expedita, alias optio quas, est. Dicta, voluptatem!"
-               wrapText="true">
-            <padding>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </padding>
-        </Label>
-        <Label fx:id="lblDate" layoutY="5.0" prefWidth="100.0" text="22-02-2022">
-            <font>
-                <Font name="System Bold" size="14.0"/>
-            </font>
-            <padding>
-                <Insets left="5.0" right="5.0"/>
-            </padding>
-        </Label>
-        <Label fx:id="lblTime" layoutY="25.0" prefWidth="100.0" text="15:16:17">
-            <font>
-                <Font name="System Bold" size="14.0"/>
-            </font>
-            <padding>
-                <Insets left="5.0" right="5.0"/>
-            </padding>
-        </Label>
-    </children>
+    <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="100.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="https://res.cloudinary.com/pck-group/image/upload/v1655628901/MMT/enote/images/ethernet_scvhsm.png"/>
+    </ImageView>
+    <Label fx:id="lblPort" alignment="CENTER" contentDisplay="CENTER" layoutX="130.0" prefHeight="20.0" text="9999"/>
+    <Label fx:id="reqContent" layoutX="100.0" layoutY="20.0" prefWidth="462.0"
+           text="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officia voluptatem nobis culpa omnis cupiditate expedita, alias optio quas, est. Dicta, voluptatem!Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officia voluptatem nobis culpa omnis cupiditate expedita, alias optio quas, est. Dicta, voluptatem!Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officia voluptatem nobis culpa omnis cupiditate expedita, alias optio quas, est. Dicta, voluptatem!Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officia voluptatem nobis culpa omnis cupiditate expedita, alias optio quas, est. Dicta, voluptatem!"
+           wrapText="true">
+        <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+        </padding>
+    </Label>
+    <Label fx:id="lblDate" layoutY="5.0" prefWidth="100.0" text="22-02-2022">
+        <font>
+            <Font name="System Bold" size="14.0"/>
+        </font>
+        <padding>
+            <Insets left="5.0" right="5.0"/>
+        </padding>
+    </Label>
+    <Label fx:id="lblTime" layoutY="25.0" prefWidth="100.0" text="15:16:17">
+        <font>
+            <Font name="System Bold" size="14.0"/>
+        </font>
+        <padding>
+            <Insets left="5.0" right="5.0"/>
+        </padding>
+    </Label>
 </AnchorPane>
