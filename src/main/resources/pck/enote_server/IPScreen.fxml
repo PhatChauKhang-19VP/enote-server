@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pck.enote_server.controller.IPScreenController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" fx:controller="pck.enote_server.controller.IPScreenController">
     <children>
         <Pane layoutX="100.0" layoutY="70.0" prefHeight="465.0" prefWidth="400.0">
             <children>

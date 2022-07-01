@@ -4,8 +4,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-<AnchorPane prefWidth="560.0" style="-fx-border-color: #000; -fx-border-width: 0 0 1 0;"
-            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefWidth="560.0"
+            style="-fx-border-color: #000; -fx-border-width: 0 0 1 0;" xmlns="http://javafx.com/javafx/18"
             fx:controller="pck.enote_server.controller.ClientReqItemController">
     <children>
         <Label fx:id="reqContent" layoutX="100.0" prefHeight="50.0" prefWidth="462.0"
