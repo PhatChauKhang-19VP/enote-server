@@ -7,6 +7,6 @@ public class Main {
     public static void main(String[] args) {
         DatabaseCommunication.init();
         CloudAPI.init();
-        Server.main(args);
+        ServerGUI.main(args);
     }
 }
