@@ -57,6 +57,8 @@ public class Server {
                         Client client = new Client(socket);
                         clients.put(socket.getPort(), client);
 
+                        System.out.println("clients size = " + clients.size());
+
                         ServerGUI.addNewClient(client);
 
                         System.out.println("Number of client: " + clients.size());

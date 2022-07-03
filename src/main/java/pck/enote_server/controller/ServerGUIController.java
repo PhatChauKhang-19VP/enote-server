@@ -27,13 +27,14 @@ public class ServerGUIController implements Initializable {
 
     public LinkedHashMap<Integer, AnchorPane> clientItemList = new LinkedHashMap<>();
 
-    public void addNewReqToList(String req) {
+    public void addNewReqToList(Client client, String req) {
         try {
             FXMLLoader fxmlLoaderReq = new FXMLLoader();
             fxmlLoaderReq.setLocation(ServerGUI.class.getResource("ClientReqItem.fxml"));
             AnchorPane reqPane = fxmlLoaderReq.load();
             ClientReqItemController ctrlReq = fxmlLoaderReq.getController();
             ctrlReq.reqContent.setText(req);
+            ctrlReq.clientProperty.setValue(client);
             vbClientReqList.getChildren().add(0, reqPane);
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,7 +76,7 @@ public class ServerGUIController implements Initializable {
 
                 clientItemList.put(client.getSocket().getPort(), clientPane);
 
-                vbClientList.getChildren().addAll(clientItemList.values());
+                vbClientList.getChildren().add(clientPane);
             } catch (IOException e) {
                 e.printStackTrace();
             }

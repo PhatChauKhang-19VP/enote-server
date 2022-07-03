@@ -8,6 +8,7 @@ import pck.enote_server.api.res.*;
 import pck.enote_server.cloudinary.CloudAPI;
 import pck.enote_server.db.DatabaseCommunication;
 import pck.enote_server.db.DbQueryResult;
+import pck.enote_server.helper.FileHelper;
 import pck.enote_server.model.Note;
 
 import java.util.HashMap;
@@ -54,7 +55,7 @@ public class Worker extends Thread {
         }
 
         Platform.runLater(() -> {
-            ServerGUI.addNewReqToList(req.toString());
+            ServerGUI.addNewReqToList(client, req.toString());
         });
 
         REQUEST_TYPE reqType = req.getType();
@@ -104,12 +105,21 @@ public class Worker extends Thread {
                 SendFileReq sendFileReq = (SendFileReq) req;
                 Map result = CloudAPI.uploadFile(sendFileReq.getFilename(), sendFileReq.getBuffer());
 
+
                 if (result == null) {
                     return API.getErrorRes();
                 }
 
+                new Thread(() -> {
+                    String username = client.getUsername();
+
+                    String type = FileHelper.getMimeTypeFromURL((String) result.get("secure_url"));
+
+                    DatabaseCommunication.addNewNote(username, type, (String) result.get("secure_url"));
+                }).start();
+
                 return new SendFileRes(
-                        RESPONSE_STATUS.FAILED,
+                        RESPONSE_STATUS.SUCCESS,
                         "upload successfully",
                         (String) result.get("secure_url")
                 );

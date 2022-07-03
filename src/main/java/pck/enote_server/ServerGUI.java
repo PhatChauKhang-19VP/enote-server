@@ -37,10 +37,10 @@ public class ServerGUI extends Application {
     }
 
 
-    public static void addNewReqToList(String req) {
+    public static void addNewReqToList(Client client, String req) {
         //get ServerGUI controller
         ServerGUIController serverGUICtrl = fxmlLoader.getController();
-        serverGUICtrl.addNewReqToList(req);
+        serverGUICtrl.addNewReqToList(client, req);
     }
 
     public static void gotoMainScreen() {

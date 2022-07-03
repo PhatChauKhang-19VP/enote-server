@@ -41,4 +41,25 @@ public class FileHelper {
     public static String getMimetype(File file) {
         return URLConnection.guessContentTypeFromName(file.getName());
     }
+
+    public static String getMimeTypeFromURL(String url_string){
+        try {
+            String type = null;
+            if (URLConnection.guessContentTypeFromName(url_string) == null ){
+
+                URL u = new URL(url_string);
+                URLConnection uc = null;
+                uc = u.openConnection();
+                type = uc.getContentType();
+                System.out.println(type);
+
+                return type;
+            }
+
+            return URLConnection.guessContentTypeFromName(url_string);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "unknown";
+        }
+    }
 }
