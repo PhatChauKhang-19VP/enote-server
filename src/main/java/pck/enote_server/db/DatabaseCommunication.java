@@ -79,7 +79,7 @@ public class DatabaseCommunication {
 
     public static DbQueryResult.SignUp signUp(String username, String password) {
         try (Connection conn = connect();
-             CallableStatement cstmt = conn.prepareCall("call usp_signIn(?, ?, ?, ?)");
+             CallableStatement cstmt = conn.prepareCall("call usp_signUp(?, ?, ?, ?)");
         ) {
             cstmt.setString(1, username);
             cstmt.setString(2, password);

@@ -3,6 +3,7 @@ package pck.enote_server.api.req;
 import pck.enote_server.helper.FileHelper;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class SendFileReq extends BaseReq {
     private final String filename;
@@ -26,5 +27,13 @@ public class SendFileReq extends BaseReq {
 
     public byte[] getBuffer() {
         return buffer;
+    }
+
+    @Override
+    public String toString() {
+        return "SendFileReq{" +
+                "type=" + type +
+                ", buffer length=" + Arrays.toString(buffer).length() +
+                '}';
     }
 }

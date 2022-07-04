@@ -31,7 +31,7 @@ public class Worker extends Thread {
             if (res == null) {
                 break;
             }
-            System.out.println(res);
+            System.out.println("Worker.print: " + res);
 
             //Send response to client
             API.sendRes(client, res);
@@ -39,6 +39,9 @@ public class Worker extends Thread {
             System.out.println("worker sent RES and keep looping");
         }
         Server.clients.remove(client.getSocket().getPort());
+        Platform.runLater(() -> {
+            ServerGUI.addNewReqToList(client, client.toString() + " disconnected");
+        });
         Platform.runLater(() -> {
             ServerGUI.removeClient(client);
         });
@@ -68,7 +71,8 @@ public class Worker extends Thread {
 
             case SIGN_IN -> {
                 SignInReq signInReq = (SignInReq) req;
-                if (Objects.equals(DatabaseCommunication.signIn(signInReq.getUsername(), signInReq.getPassword()).getStatus(), DbQueryResult.success)) {
+                DbQueryResult.SignIn signInResult = DatabaseCommunication.signIn(signInReq.getUsername(), signInReq.getPassword());
+                if (signInResult.getStatus().equals(DbQueryResult.success)) {
                     //update username in display list
                     Platform.runLater(() -> {
                         client.setUsername(signInReq.getUsername());
@@ -76,28 +80,28 @@ public class Worker extends Thread {
 
                     return new SignInRes(
                             RESPONSE_STATUS.SUCCESS,
-                            "Sign in successfully"
+                            signInResult.getMsg()
                     );
                 }
 
                 return new SignInRes(
                         RESPONSE_STATUS.FAILED,
-                        "Sign in failed"
+                        signInResult.getMsg()
                 );
             }
             case SIGN_UP -> {
                 SignUpReq signUpReq = (SignUpReq) req;
-
-                if (DatabaseCommunication.signUp(signUpReq.getUsername(), signUpReq.getPassword()).getStatus().equals(DbQueryResult.success)) {
+                DbQueryResult.SignUp signUpResult = DatabaseCommunication.signUp(signUpReq.getUsername(), signUpReq.getPassword());
+                if (signUpResult.getStatus().equals(DbQueryResult.success)) {
                     return new SignUpRes(
                             RESPONSE_STATUS.SUCCESS,
-                            "Sign up successfully"
+                            signUpResult.getMsg()
                     );
                 }
 
                 return new SignUpRes(
                         RESPONSE_STATUS.FAILED,
-                        "Sign up failed"
+                        signUpResult.getMsg()
                 );
             }
 

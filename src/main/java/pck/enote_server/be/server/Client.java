@@ -58,4 +58,9 @@ public class Client {
     public void setDataOut(DataOutputStream dataOut) {
         this.dataOut = dataOut;
     }
+
+    @Override
+    public String toString() {
+        return username.getName();
+    }
 }
