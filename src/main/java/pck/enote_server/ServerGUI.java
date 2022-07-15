@@ -58,7 +58,6 @@ public class ServerGUI extends Application {
 
         ServerGUI.fxmlLoader = loader;
 
-
         Scene scene = new Scene(page, width, height);
         stage.setScene(scene);
 

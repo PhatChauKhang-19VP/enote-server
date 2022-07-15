@@ -21,5 +21,15 @@ public class GetNoteListRes extends BaseRes {
     public HashMap<Integer, Note> getNoteList() {
         return noteList;
     }
+
+    @Override
+    public String toString() {
+        return "GetNoteListRes{" +
+                "status=" + status +
+                ", msg='" + msg + '\'' +
+                ", type=" + type +
+                ", noteList=" + noteList +
+                '}';
+    }
 }
 

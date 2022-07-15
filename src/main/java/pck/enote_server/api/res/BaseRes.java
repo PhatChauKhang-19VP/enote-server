@@ -24,4 +24,13 @@ public abstract class BaseRes {
     public REQUEST_TYPE getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "BaseRes{" +
+                "status=" + status +
+                ", msg='" + msg + '\'' +
+                ", type=" + type +
+                '}';
+    }
 }

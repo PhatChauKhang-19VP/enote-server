@@ -9,6 +9,7 @@ import pck.enote_server.model.Note;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class API {
@@ -158,7 +159,7 @@ public class API {
                     dataOut.writeUTF(note.getCreatedAt());
 
                     byte[] buffer = FileHelper.getFileBufferFromURL(note.getUri());
-                    System.out.println(buffer);
+                    System.out.println(buffer.length);
                     dataOut.writeInt(buffer.length);
                     dataOut.write(buffer);
 

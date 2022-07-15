@@ -7,4 +7,13 @@ public class TestConnectionRes extends BaseRes {
     public TestConnectionRes(RESPONSE_STATUS status, String msg) {
         super(status, msg, REQUEST_TYPE.TEST_CONNECTION);
     }
+
+    @Override
+    public String toString() {
+        return "TestConnectionRes{" +
+                "status=" + status +
+                ", msg='" + msg + '\'' +
+                ", type=" + type +
+                '}';
+    }
 }

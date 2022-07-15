@@ -131,10 +131,16 @@ public class IPScreenController implements Initializable {
 
                 if (Server.create()) {
                     ButtonType btnGotoHome = new ButtonType("Đi đến ServerGUI", ButtonBar.ButtonData.YES);
-
+                    InetAddress ip = null;
+                    try {
+                        ip = InetAddress.getLocalHost();
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
+                    assert ip != null;
                     Alert alert = new Alert(
                             Alert.AlertType.INFORMATION,
-                            "Đã tạo socket server thành công với\n" + Server.getServerSocket(),
+                            "IP/Port: " + ip.getHostAddress() + "/" + Server.SERVER_PORT,
                             btnGotoHome);
                     alert.setTitle("Thông báo");
                     alert.setHeaderText("Tạo socket server thành công !");
