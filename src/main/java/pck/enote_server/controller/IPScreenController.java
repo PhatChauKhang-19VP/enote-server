@@ -3,6 +3,7 @@ package pck.enote_server.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import pck.enote_server.ServerGUI;
 import pck.enote_server.be.server.Server;
 
@@ -18,7 +19,7 @@ public class IPScreenController implements Initializable {
     public Label ipWarningField;
 
     public TextField portField;
-    public Label portWarningField;
+    public Text portWarningField;
 
     public Button connectButton;
     public Label statusAlert;
@@ -62,6 +63,8 @@ public class IPScreenController implements Initializable {
                 statusAlert.setVisible(false);
             }
         });
+
+        portWarningField.setWrappingWidth(250);
     }
 
     public boolean checkIPValid(String ip) {
@@ -102,7 +105,7 @@ public class IPScreenController implements Initializable {
         String regex = "^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4}))$";
 
         if (!port.matches(regex)) {
-            portField.setStyle(errorStyle);
+            // portField.setStyle(errorStyle);
             portWarningField.setText("Số cổng chỉ bao gồm các kí tự từ 0-9 và nằm trong khoảng 0 - 65535!");
             portWarningField.setStyle(errorMessage);
 
