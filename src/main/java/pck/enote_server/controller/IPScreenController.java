@@ -106,16 +106,30 @@ public class IPScreenController implements Initializable {
 
         if (!port.matches(regex)) {
             // portField.setStyle(errorStyle);
-            portWarningField.setText("Số cổng chỉ bao gồm các kí tự từ 0-9 và nằm trong khoảng 0 - 65535!");
+            portWarningField.setText("Số cổng chỉ bao gồm các kí tự từ 0-9 và nằm trong khoảng 1024 - 65535!");
             portWarningField.setStyle(errorMessage);
 
             return false;
         }
+        else {
+            int portNumber = Integer.parseInt(portField.getText());
+
+            if (0 <= portNumber && portNumber < 1024){
+                portWarningField.setText("Số cổng chỉ bao gồm các kí tự từ 0-9 và nằm trong khoảng 1024 - 65535!");
+                portWarningField.setStyle(errorMessage);
+
+                return false;
+            }
+        }
+
+
+
 
         portField.setStyle(successStyle);
         portWarningField.setText("");
         portWarningField.setStyle(successMessage);
 
+        portWarningField.setWrappingWidth(250);
         return true;
     }
 
@@ -156,6 +170,7 @@ public class IPScreenController implements Initializable {
                     }
                 } else {
                     System.out.println("Failed to create server !");
+                    statusAlert.setText("Failed to create server !");
                 }
             }
         }
