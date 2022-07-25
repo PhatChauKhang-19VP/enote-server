@@ -8,10 +8,11 @@ import java.net.Socket;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Server {
     public static final int NUM_OF_THREAD = 32;
-    public static int SERVER_PORT = 7;
+    public static int SERVER_PORT = 7777;
     public static LinkedHashMap<Integer, Client> clients = new LinkedHashMap<>();
     public static Thread thread;
 
@@ -26,7 +27,7 @@ public class Server {
     }
 
     public static boolean create() {
-        if (serverSocket != null && !serverSocket.isClosed()){
+        if (serverSocket != null && !serverSocket.isClosed()) {
             try {
                 serverSocket.close();
             } catch (IOException e) {
@@ -71,7 +72,11 @@ public class Server {
                     }
                 }
                 serverSocket.close();
-            } catch (IOException e) {
+                System.out.println("Server socket has closed");
+                executor.shutdown();
+                executor.awaitTermination(10, TimeUnit.SECONDS); // wait for 10s in this case
+                executor.shutdownNow();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
@@ -79,12 +84,13 @@ public class Server {
     }
 
     public static void stop() {
-        if (serverSocket != null && !serverSocket.isClosed()) {
-            try {
-                serverSocket.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            serverSocket.close();
+            for (int key : clients.keySet()) {
+                clients.get(key).getSocket().close();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
